@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//home/nuevo/iñakiPortafolios/**)",
+      "Bash(npx create-next-app@latest portafolio --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --use-npm)",
+      "Bash(cp /home/nuevo/iñakiPortafolios/portafolio/CLAUDE.md /tmp/CLAUDE.md.bak)",
+      "Bash(cp /home/nuevo/iñakiPortafolios/portafolio/context.md /tmp/context.md.bak)"
+    ]
+  }
+}
