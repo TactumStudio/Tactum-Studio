@@ -34,7 +34,7 @@ export function PhotoGallery({ photos }: { photos: Photo[] }) {
               height={600}
               className="w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-              priority={i < 6}
+              priority={i < 3}
             />
             {/* Overlay sutil en hover */}
             <div className="absolute inset-0 bg-white/0 group-hover:bg-white/5 transition-colors duration-300" />
