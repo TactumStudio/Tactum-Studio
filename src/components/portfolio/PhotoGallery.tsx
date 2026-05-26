@@ -35,6 +35,8 @@ export function PhotoGallery({ photos }: { photos: Photo[] }) {
               className="w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
               priority={i < 3}
+              placeholder="blur"
+              blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="
             />
             {/* Overlay sutil en hover */}
             <div className="absolute inset-0 bg-white/0 group-hover:bg-white/5 transition-colors duration-300" />
