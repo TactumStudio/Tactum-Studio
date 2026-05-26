@@ -5,7 +5,6 @@ import { ProductCard } from "@/components/shop/ProductCard";
 import { getLocale, t } from "@/lib/i18n";
 
 export const metadata: Metadata = {
-  title: "Shop",
   description: "Camisetas y prints exclusivos.",
 };
 

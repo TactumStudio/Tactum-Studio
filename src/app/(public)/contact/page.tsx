@@ -2,8 +2,6 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { getLocale, t } from "@/lib/i18n";
 import type { SiteSettings } from "@/types";
 
-export const metadata = { title: "Contact" };
-
 export default async function ContactPage() {
   const supabase = createAdminClient();
   const { data } = await supabase

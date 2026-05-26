@@ -5,7 +5,6 @@ import { ProjectsGrid } from "@/components/portfolio/ProjectsGrid";
 import { getLocale, t } from "@/lib/i18n";
 
 export const metadata: Metadata = {
-  title: "Portfolio",
   description: "Todos los proyectos.",
 };
 
