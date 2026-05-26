@@ -10,10 +10,10 @@ const geist = Geist({
 
 export const metadata: Metadata = {
   title: {
-    default: "Portfolio",
-    template: "%s | Portfolio",
+    default: "Tactum Studio",
+    template: "%s | Tactum Studio",
   },
-  description: "Portfolio fotográfico y audiovisual",
+  description: "Tactum Studio — fotografía y producción audiovisual",
 };
 
 export default function RootLayout({
