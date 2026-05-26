@@ -29,7 +29,7 @@ export function ProjectsGrid({ projects }: { projects: Project[] }) {
               height={600}
               className="w-full object-cover transition-transform duration-700 group-hover:scale-105"
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-              priority={i < 3}
+              priority={i < 2}
             />
           ) : (
             <div className="aspect-[4/3] flex items-center justify-center">
