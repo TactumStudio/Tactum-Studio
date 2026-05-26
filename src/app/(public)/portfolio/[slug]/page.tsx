@@ -18,9 +18,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     .eq("slug", slug)
     .single();
 
-  if (!data) return { title: "Proyecto" };
+  if (!data) return {};
   return {
-    title: data.title,
     description: data.description ?? undefined,
   };
 }
