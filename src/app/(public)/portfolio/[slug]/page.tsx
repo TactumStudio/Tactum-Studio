@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import type { Project, Photo } from "@/types";
+import type { Project, Photo, ProjectVideo } from "@/types";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { PhotoGallery } from "@/components/portfolio/PhotoGallery";
 
@@ -38,6 +38,12 @@ export default async function ProjectPage({ params }: Props) {
 
   const { data: photos } = await supabase
     .from("photos")
+    .select("*")
+    .eq("project_id", (project as Project).id)
+    .order("display_order", { ascending: true });
+
+  const { data: videos } = await supabase
+    .from("project_videos")
     .select("*")
     .eq("project_id", (project as Project).id)
     .order("display_order", { ascending: true });
@@ -81,8 +87,11 @@ export default async function ProjectPage({ params }: Props) {
           )}
         </div>
 
-        {/* Galería */}
-        <PhotoGallery photos={(photos as Photo[]) ?? []} />
+        {/* Galeria (fotos + vídeos barrejats per display_order) */}
+        <PhotoGallery
+          photos={(photos as Photo[]) ?? []}
+          videos={(videos as ProjectVideo[]) ?? []}
+        />
       </div>
     </div>
   );

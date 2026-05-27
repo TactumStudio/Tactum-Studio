@@ -24,6 +24,8 @@ export async function updateSettings(formData: FormData) {
     about_content: (formData.get("about_content") as string) || null,
     about_content_ca: (formData.get("about_content_ca") as string) || null,
     about_content_en: (formData.get("about_content_en") as string) || null,
+    about_photo_url: (formData.get("about_photo_url") as string) || null,
+    about_photo2_url: (formData.get("about_photo2_url") as string) || null,
     contact_email: (formData.get("contact_email") as string) || null,
     contact_instagram: (formData.get("contact_instagram") as string) || null,
     contact_phone: (formData.get("contact_phone") as string) || null,

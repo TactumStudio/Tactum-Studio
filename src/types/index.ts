@@ -43,10 +43,21 @@ export interface SiteSettings {
   about_content: string | null;
   about_content_ca: string | null;
   about_content_en: string | null;
+  about_photo_url: string | null;
+  about_photo2_url: string | null;
   contact_email: string | null;
   contact_instagram: string | null;
   contact_phone: string | null;
   contact_location: string | null;
+}
+
+export interface ProjectVideo {
+  id: string;
+  project_id: string;
+  url: string;
+  title: string | null;
+  display_order: number;
+  created_at: string;
 }
 
 export interface Product {

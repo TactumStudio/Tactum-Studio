@@ -2,9 +2,7 @@ import type { Metadata } from "next";
 import type { Project } from "@/types";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { CreateProjectForm } from "@/components/admin/CreateProjectForm";
-import { FeaturedToggle } from "@/components/admin/FeaturedToggle";
-import { DeleteButton } from "@/components/admin/DeleteButton";
-import { CoverImageUpload } from "@/components/admin/CoverImageUpload";
+import { ProjectTableRow } from "@/components/admin/ProjectTableRow";
 
 export const metadata: Metadata = { title: "Projectes" };
 
@@ -58,34 +56,7 @@ export default async function AdminProjectsPage() {
             </thead>
             <tbody className="divide-y divide-neutral-100">
               {(projects as Project[]).map((project) => (
-                <tr
-                  key={project.id}
-                  className="hover:bg-neutral-50 transition-colors"
-                >
-                  <td className="px-4 py-3">
-                    <CoverImageUpload
-                      projectId={project.id}
-                      currentUrl={project.cover_image_url}
-                    />
-                  </td>
-                  <td className="px-4 py-3 text-neutral-900 font-medium">
-                    {project.title}
-                  </td>
-                  <td className="px-4 py-3 text-neutral-500 font-mono text-xs hidden md:table-cell">
-                    {project.slug}
-                  </td>
-                  <td className="px-4 py-3">
-                    <div className="flex justify-center">
-                      <FeaturedToggle
-                        id={project.id}
-                        isFeatured={project.is_featured}
-                      />
-                    </div>
-                  </td>
-                  <td className="px-4 py-3 text-right">
-                    <DeleteButton id={project.id} />
-                  </td>
-                </tr>
+                <ProjectTableRow key={project.id} project={project} />
               ))}
             </tbody>
           </table>

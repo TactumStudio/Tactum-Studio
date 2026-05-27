@@ -46,3 +46,37 @@ export async function updatePhotoOrder(
 
   revalidatePath("/admin/photos");
 }
+
+export async function addProjectVideo(
+  projectId: string,
+  url: string,
+  title?: string,
+  projectSlug?: string
+) {
+  const supabase = createAdminClient();
+
+  const { error } = await supabase.from("project_videos").insert({
+    project_id: projectId,
+    url: url.trim(),
+    title: title?.trim() || null,
+  });
+
+  if (error) throw new Error(error.message);
+
+  revalidatePath("/admin/photos");
+  if (projectSlug) revalidatePath(`/portfolio/${projectSlug}`);
+}
+
+export async function deleteProjectVideo(id: string, projectSlug?: string) {
+  const supabase = createAdminClient();
+
+  const { error } = await supabase
+    .from("project_videos")
+    .delete()
+    .eq("id", id);
+
+  if (error) throw new Error(error.message);
+
+  revalidatePath("/admin/photos");
+  if (projectSlug) revalidatePath(`/portfolio/${projectSlug}`);
+}

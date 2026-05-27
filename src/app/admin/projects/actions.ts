@@ -57,6 +57,26 @@ export async function toggleFeatured(id: string, isFeatured: boolean) {
   revalidatePath("/");
 }
 
+export async function updateProject(id: string, formData: FormData) {
+  const supabase = createAdminClient();
+
+  const title = (formData.get("title") as string).trim();
+  const description = (formData.get("description") as string)?.trim() || null;
+
+  if (!title) throw new Error("El títol és obligatori");
+
+  const { error } = await supabase
+    .from("projects")
+    .update({ title, description })
+    .eq("id", id);
+
+  if (error) throw new Error(error.message);
+
+  revalidatePath("/admin/projects");
+  revalidatePath("/");
+  revalidatePath("/portfolio");
+}
+
 export async function deleteProject(id: string) {
   const supabase = createAdminClient();
 

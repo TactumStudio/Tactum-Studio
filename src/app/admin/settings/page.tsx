@@ -175,6 +175,14 @@ export default async function SettingsPage(props: {
           <h2 className="text-[10px] tracking-[0.3em] uppercase text-neutral-500 pb-2 border-b border-neutral-200">
             Sobre mi
           </h2>
+
+          <HeroImageUploader
+            currentUrl={settings?.about_photo_url ?? null}
+            name="about_photo_url"
+            folder="about"
+            label="Foto principal (apareix a l'esquerra del text)"
+          />
+
           <label className={labelClass}>
             Text de la pàgina Sobre mi (separa paràgrafs amb línia en blanc)
           </label>
@@ -192,6 +200,13 @@ export default async function SettingsPage(props: {
               <textarea name="about_content_en" defaultValue={settings?.about_content_en ?? ""} rows={8} className={`${inputClass} resize-y flex-1`} placeholder="If empty, falls back to Spanish" />
             </div>
           </div>
+
+          <HeroImageUploader
+            currentUrl={settings?.about_photo2_url ?? null}
+            name="about_photo2_url"
+            folder="about"
+            label="Foto gran (apareix a la part inferior, ample complet)"
+          />
         </div>
 
         {/* ── CONTACTE ─────────────────────────────────────────── */}

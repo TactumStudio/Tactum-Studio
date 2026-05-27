@@ -1,9 +1,10 @@
 import Image from "next/image";
 import type { Metadata } from "next";
-import type { Project, Photo } from "@/types";
+import type { Project, Photo, ProjectVideo } from "@/types";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { PhotoUploader } from "@/components/admin/PhotoUploader";
 import { DeletePhotoButton } from "@/components/admin/DeletePhotoButton";
+import { VideoManager } from "@/components/admin/VideoManager";
 
 export const metadata: Metadata = { title: "Fotos" };
 
@@ -27,6 +28,14 @@ export default async function AdminPhotosPage({ searchParams }: Props) {
   const { data: photos } = selectedProject
     ? await supabase
         .from("photos")
+        .select("*")
+        .eq("project_id", selectedProject.id)
+        .order("display_order", { ascending: true })
+    : { data: null };
+
+  const { data: videos } = selectedProject
+    ? await supabase
+        .from("project_videos")
         .select("*")
         .eq("project_id", selectedProject.id)
         .order("display_order", { ascending: true })
@@ -113,6 +122,18 @@ export default async function AdminPhotosPage({ searchParams }: Props) {
                 ))}
               </div>
             )}
+          </div>
+
+          {/* Vídeos */}
+          <div className="mt-10 p-6 bg-neutral-50 rounded-sm border border-neutral-200">
+            <h2 className="text-xs tracking-widest uppercase text-neutral-500 mb-5">
+              Vídeos d&apos;Instagram — {selectedProject.title}
+            </h2>
+            <VideoManager
+              projectId={selectedProject.id}
+              projectSlug={selectedProject.slug}
+              videos={(videos as ProjectVideo[]) ?? []}
+            />
           </div>
         </>
       ) : (

@@ -5,9 +5,17 @@ import { useState, useRef } from "react";
 
 interface Props {
   currentUrl: string | null;
+  name?: string;
+  folder?: string;
+  label?: string;
 }
 
-export function HeroImageUploader({ currentUrl }: Props) {
+export function HeroImageUploader({
+  currentUrl,
+  name = "hero_image_url",
+  folder = "hero",
+  label = "Imatge de fons del hero",
+}: Props) {
   const [url, setUrl] = useState(currentUrl ?? "");
   const [uploading, setUploading] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -21,7 +29,7 @@ export function HeroImageUploader({ currentUrl }: Props) {
         body: JSON.stringify({
           filename: file.name,
           contentType: file.type,
-          folder: "hero",
+          folder,
         }),
       });
       const { signedUrl, publicUrl } = await res.json();
@@ -39,7 +47,7 @@ export function HeroImageUploader({ currentUrl }: Props) {
   return (
     <div className="space-y-3">
       <p className="text-[10px] tracking-[0.3em] uppercase text-neutral-500">
-        Imatge de fons del hero
+        {label}
       </p>
 
       {/* Preview */}
@@ -52,7 +60,7 @@ export function HeroImageUploader({ currentUrl }: Props) {
       <div className="flex gap-3">
         <input
           type="hidden"
-          name="hero_image_url"
+          name={name}
           value={url}
         />
         <input
