@@ -56,7 +56,7 @@ export function PhotoGallery({ photos, videos = [] }: Props) {
         {allMedia.map((media) => {
           if (media.type === "video") {
             return (
-              <div key={`v-${media.item.id}`} className="break-inside-avoid">
+              <div key={`v-${media.item.id}`} className="break-inside-avoid max-w-[540px] mx-auto">
                 <blockquote
                   className="instagram-media"
                   data-instgrm-permalink={media.item.url}
