@@ -11,10 +11,6 @@ declare global {
   }
 }
 
-type MediaItem =
-  | { type: "photo"; item: Photo }
-  | { type: "video"; item: ProjectVideo };
-
 interface Props {
   photos: Photo[];
   videos?: ProjectVideo[];
@@ -23,12 +19,13 @@ interface Props {
 export function PhotoGallery({ photos, videos = [] }: Props) {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
-  const mediaItems: MediaItem[] = [
-    ...photos.map((p) => ({ type: "photo" as const, item: p })),
-    ...videos.map((v) => ({ type: "video" as const, item: v })),
-  ].sort((a, b) => a.item.display_order - b.item.display_order);
-
   const sortedPhotos = photos.slice().sort((a, b) => a.display_order - b.display_order);
+  const sortedVideos = videos.slice().sort((a, b) => a.display_order - b.display_order);
+
+  const allMedia = [
+    ...sortedPhotos.map((p) => ({ type: "photo" as const, item: p })),
+    ...sortedVideos.map((v) => ({ type: "video" as const, item: v })),
+  ].sort((a, b) => a.item.display_order - b.item.display_order);
 
   useEffect(() => {
     if (videos.length === 0) return;
@@ -43,7 +40,7 @@ export function PhotoGallery({ photos, videos = [] }: Props) {
     }
   }, [videos.length]);
 
-  if (mediaItems.length === 0) {
+  if (allMedia.length === 0) {
     return (
       <div className="flex items-center justify-center h-64 border border-dashed border-white/10">
         <p className="text-neutral-600 text-xs tracking-widest uppercase">
@@ -56,7 +53,7 @@ export function PhotoGallery({ photos, videos = [] }: Props) {
   return (
     <>
       <div className="columns-1 sm:columns-2 lg:columns-3 gap-3 space-y-3">
-        {mediaItems.map((media) => {
+        {allMedia.map((media) => {
           if (media.type === "video") {
             return (
               <div key={`v-${media.item.id}`} className="break-inside-avoid">
@@ -74,7 +71,6 @@ export function PhotoGallery({ photos, videos = [] }: Props) {
           }
 
           const photoIdx = sortedPhotos.findIndex((p) => p.id === media.item.id);
-
           return (
             <button
               key={`p-${media.item.id}`}
