@@ -32,10 +32,10 @@ export default async function AboutPage() {
           {t("about.label", locale)}
         </p>
 
-        {/* Top section: photo left + text right */}
-        <div className={`flex flex-col ${photo1 ? "md:flex-row md:gap-12" : ""} gap-8 mb-16`}>
+        {/* Photo floats left, text wraps around it and continues full-width below */}
+        <div className="mb-16">
           {photo1 && (
-            <div className="shrink-0 md:w-72 lg:w-80">
+            <div className="mb-8 md:float-left md:mr-12 md:mb-4 w-full md:w-64 lg:w-80">
               <div className="relative w-full aspect-[3/4] rounded-sm overflow-hidden bg-neutral-100">
                 <Image
                   src={photo1}
@@ -48,21 +48,21 @@ export default async function AboutPage() {
             </div>
           )}
 
-          <div className="flex-1">
-            {aboutContent ? (
-              <div className="space-y-6">
-                {aboutContent.split("\n\n").map((paragraph, i) => (
-                  <p key={i} className="text-neutral-700 text-lg leading-relaxed font-light">
-                    {paragraph}
-                  </p>
-                ))}
-              </div>
-            ) : (
-              <p className="text-neutral-400 italic text-lg font-light">
-                {t("about.empty", locale)}
-              </p>
-            )}
-          </div>
+          {aboutContent ? (
+            <div className="space-y-6">
+              {aboutContent.split("\n\n").map((paragraph, i) => (
+                <p key={i} className="text-neutral-700 text-lg leading-relaxed font-light">
+                  {paragraph}
+                </p>
+              ))}
+            </div>
+          ) : (
+            <p className="text-neutral-400 italic text-lg font-light">
+              {t("about.empty", locale)}
+            </p>
+          )}
+
+          <div className="clear-both" />
         </div>
 
         {/* Bottom large photo */}

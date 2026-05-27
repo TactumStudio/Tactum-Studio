@@ -64,7 +64,6 @@ export function PhotoGallery({ photos, videos = [] }: Props) {
                   className="instagram-media"
                   data-instgrm-permalink={media.item.url}
                   data-instgrm-version="14"
-                  style={{ maxWidth: 540, minWidth: 326, width: "calc(100% - 2px)" }}
                 >
                   <a href={media.item.url} target="_blank" rel="noreferrer">
                     {media.item.title ?? "Veure a Instagram"}

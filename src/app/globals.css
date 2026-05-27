@@ -26,3 +26,10 @@ body {
 img {
   display: block;
 }
+
+/* Instagram embed: override the 326px min-width Instagram's script sets on both
+   the blockquote placeholder and the generated iframe, so they fit any column width */
+.instagram-media,
+.instagram-media-rendered {
+  min-width: 0 !important;
+}
