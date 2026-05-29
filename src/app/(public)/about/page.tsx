@@ -25,9 +25,7 @@ export default async function AboutPage() {
   const photo1 = settings?.about_photo_url ?? null;
   const photo2 = settings?.about_photo2_url ?? null;
 
-  const paragraphs = aboutContent?.split("\n\n").filter(Boolean) ?? [];
-  const firstParagraph = paragraphs[0] ?? null;
-  const restParagraphs = paragraphs.slice(1);
+  const paragraphs = aboutContent?.replace(/\r\n/g, "\n").split("\n\n").filter(Boolean) ?? [];
 
   return (
     <div className="min-h-screen bg-white pt-28 pb-24 px-6 md:px-10">
@@ -36,10 +34,10 @@ export default async function AboutPage() {
           {t("about.label", locale)}
         </p>
 
-        {/* First paragraph beside the photo — strict flex, text never overflows below */}
-        <div className={`flex flex-col ${photo1 ? "md:flex-row md:gap-12" : ""} gap-8 mb-16`}>
+        {/* Photo floated left — text wraps around it and continues below naturally */}
+        <div className="mb-16 overflow-hidden">
           {photo1 && (
-            <div className="shrink-0 md:w-64 lg:w-80">
+            <div className="md:float-left md:mr-12 mb-8 md:mb-0 md:w-64 lg:w-80">
               <div className="relative w-full aspect-[3/4] rounded-sm overflow-hidden bg-neutral-100">
                 <Image
                   src={photo1}
@@ -51,29 +49,18 @@ export default async function AboutPage() {
               </div>
             </div>
           )}
-          <div className="flex-1">
-            {firstParagraph ? (
-              <p className="text-neutral-700 text-lg leading-relaxed font-light">
-                {firstParagraph}
+          {paragraphs.length > 0 ? (
+            paragraphs.map((para, i) => (
+              <p key={i} className={`text-neutral-700 text-justify text-lg leading-relaxed font-light${i > 0 ? " mt-6" : ""}`}>
+                {para}
               </p>
-            ) : (
-              <p className="text-neutral-400 italic text-lg font-light">
-                {t("about.empty", locale)}
-              </p>
-            )}
-          </div>
+            ))
+          ) : (
+            <p className="text-neutral-400 italic text-justify text-lg font-light">
+              {t("about.empty", locale)}
+            </p>
+          )}
         </div>
-
-        {/* Rest of paragraphs full-width — only rendered if there are 2+ paragraphs */}
-        {restParagraphs.length > 0 && (
-          <div className="mb-16 space-y-6">
-            {restParagraphs.map((paragraph, i) => (
-              <p key={i} className="text-neutral-700 text-lg leading-relaxed font-light">
-                {paragraph}
-              </p>
-            ))}
-          </div>
-        )}
 
         {/* Bottom large photo */}
         {photo2 && (
