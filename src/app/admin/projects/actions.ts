@@ -10,6 +10,8 @@ export async function createProject(formData: FormData) {
   const title = (formData.get("title") as string).trim();
   const slug = ((formData.get("slug") as string) || slugify(title)).trim();
   const description = (formData.get("description") as string)?.trim() || null;
+  const description_ca = (formData.get("description_ca") as string)?.trim() || null;
+  const description_en = (formData.get("description_en") as string)?.trim() || null;
   const is_featured = formData.get("is_featured") === "on";
   const cover_image_url = (formData.get("cover_image_url") as string)?.trim() || null;
 
@@ -17,7 +19,7 @@ export async function createProject(formData: FormData) {
 
   const { error } = await supabase
     .from("projects")
-    .insert({ title, slug, description, is_featured, cover_image_url });
+    .insert({ title, slug, description, description_ca, description_en, is_featured, cover_image_url });
 
   if (error) {
     if (error.code === "23505") throw new Error(`El slug "${slug}" ya existe`);
@@ -62,12 +64,14 @@ export async function updateProject(id: string, formData: FormData) {
 
   const title = (formData.get("title") as string).trim();
   const description = (formData.get("description") as string)?.trim() || null;
+  const description_ca = (formData.get("description_ca") as string)?.trim() || null;
+  const description_en = (formData.get("description_en") as string)?.trim() || null;
 
   if (!title) throw new Error("El títol és obligatori");
 
   const { error } = await supabase
     .from("projects")
-    .update({ title, description })
+    .update({ title, description, description_ca, description_en })
     .eq("id", id);
 
   if (error) throw new Error(error.message);

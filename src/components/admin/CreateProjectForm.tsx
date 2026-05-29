@@ -103,12 +103,35 @@ export function CreateProjectForm() {
 
       <div className="flex flex-col gap-1">
         <label className="text-xs text-neutral-500">Descripció</label>
-        <textarea
-          name="description"
-          rows={2}
-          placeholder="Descripció opcional del projecte..."
-          className="bg-white border border-neutral-200 text-neutral-900 rounded-sm px-3 py-2 text-sm outline-none focus:border-neutral-400 transition-colors resize-none placeholder:text-neutral-400"
-        />
+        <div className="flex flex-col gap-1.5">
+          <div className="flex items-start gap-2">
+            <span className="mt-2 text-[10px] font-mono text-neutral-400 w-5 shrink-0">ES</span>
+            <textarea
+              name="description"
+              rows={2}
+              placeholder="Descripció en castellà..."
+              className="flex-1 bg-white border border-neutral-200 text-neutral-900 rounded-sm px-3 py-2 text-sm outline-none focus:border-neutral-400 transition-colors resize-none placeholder:text-neutral-400"
+            />
+          </div>
+          <div className="flex items-start gap-2">
+            <span className="mt-2 text-[10px] font-mono text-neutral-400 w-5 shrink-0">CA</span>
+            <textarea
+              name="description_ca"
+              rows={2}
+              placeholder="Descripció en català..."
+              className="flex-1 bg-white border border-neutral-200 text-neutral-900 rounded-sm px-3 py-2 text-sm outline-none focus:border-neutral-400 transition-colors resize-none placeholder:text-neutral-400"
+            />
+          </div>
+          <div className="flex items-start gap-2">
+            <span className="mt-2 text-[10px] font-mono text-neutral-400 w-5 shrink-0">EN</span>
+            <textarea
+              name="description_en"
+              rows={2}
+              placeholder="Description in English..."
+              className="flex-1 bg-white border border-neutral-200 text-neutral-900 rounded-sm px-3 py-2 text-sm outline-none focus:border-neutral-400 transition-colors resize-none placeholder:text-neutral-400"
+            />
+          </div>
+        </div>
       </div>
 
       {/* Imatge de portada */}

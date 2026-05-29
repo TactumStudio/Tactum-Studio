@@ -4,6 +4,14 @@ import Link from "next/link";
 import type { Project, Photo, ProjectVideo } from "@/types";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { PhotoGallery } from "@/components/portfolio/PhotoGallery";
+import { getLocale } from "@/lib/i18n";
+import type { Locale } from "@/lib/i18n";
+
+function localizedDescription(project: Project, locale: Locale): string | null {
+  if (locale === "ca" && project.description_ca) return project.description_ca;
+  if (locale === "en" && project.description_en) return project.description_en;
+  return project.description;
+}
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -26,7 +34,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ProjectPage({ params }: Props) {
   const { slug } = await params;
-  const supabase = createAdminClient();
+  const [supabase, locale] = [createAdminClient(), await getLocale()];
 
   const { data: project } = await supabase
     .from("projects")
@@ -80,9 +88,9 @@ export default async function ProjectPage({ params }: Props) {
           <h1 className="text-4xl md:text-5xl font-light tracking-tight text-neutral-900 mb-4">
             {(project as Project).title}
           </h1>
-          {(project as Project).description && (
+          {localizedDescription(project as Project, locale) && (
             <p className="text-neutral-500 text-sm leading-relaxed">
-              {(project as Project).description}
+              {localizedDescription(project as Project, locale)}
             </p>
           )}
         </div>

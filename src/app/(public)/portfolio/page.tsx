@@ -30,7 +30,7 @@ export default async function PortfolioPage() {
           </h1>
         </div>
 
-        <ProjectsGrid projects={(projects as Project[]) ?? []} />
+        <ProjectsGrid projects={(projects as Project[]) ?? []} locale={locale} />
       </div>
     </div>
   );

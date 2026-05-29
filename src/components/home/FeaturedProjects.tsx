@@ -5,6 +5,12 @@ import { t } from "@/lib/i18n";
 import type { Project } from "@/types";
 import type { Locale } from "@/lib/i18n";
 
+function localizedDescription(project: Project, locale: Locale): string | null {
+  if (locale === "ca" && project.description_ca) return project.description_ca;
+  if (locale === "en" && project.description_en) return project.description_en;
+  return project.description;
+}
+
 interface Props {
   locale: Locale;
 }
@@ -28,6 +34,7 @@ export async function FeaturedProjects({ locale }: Props) {
         <div className="flex flex-col md:flex-row gap-1 md:h-[87vh]">
           <ProjectCard
             project={items[0]}
+            locale={locale}
             className="flex-[2] h-[65vw] md:h-full"
             sizes="(max-width: 768px) 100vw, 66vw"
             priority
@@ -37,6 +44,7 @@ export async function FeaturedProjects({ locale }: Props) {
               <ProjectCard
                 key={p.id}
                 project={p}
+                locale={locale}
                 className="flex-1 h-[32vw] md:h-auto"
                 sizes="(max-width: 768px) 100vw, 33vw"
               />
@@ -47,12 +55,14 @@ export async function FeaturedProjects({ locale }: Props) {
         <div className="flex flex-col md:flex-row gap-1 md:h-[78vh]">
           <ProjectCard
             project={items[0]}
+            locale={locale}
             className="flex-1 h-[60vw] md:h-full"
             sizes="(max-width: 768px) 100vw, 50vw"
             priority
           />
           <ProjectCard
             project={items[1]}
+            locale={locale}
             className="flex-1 h-[60vw] md:h-full"
             sizes="(max-width: 768px) 100vw, 50vw"
           />
@@ -61,6 +71,7 @@ export async function FeaturedProjects({ locale }: Props) {
         <div className="h-[72vh]">
           <ProjectCard
             project={items[0]}
+            locale={locale}
             className="h-full w-full"
             sizes="100vw"
             priority
@@ -85,15 +96,19 @@ export async function FeaturedProjects({ locale }: Props) {
 
 function ProjectCard({
   project,
+  locale,
   className = "",
   sizes,
   priority = false,
 }: {
   project: Project;
+  locale: Locale;
   className?: string;
   sizes: string;
   priority?: boolean;
 }) {
+  const description = localizedDescription(project, locale);
+
   return (
     <Link
       href={`/portfolio/${project.slug}`}
@@ -122,9 +137,9 @@ function ProjectCard({
         <h3 className="text-white font-light text-base md:text-lg tracking-wide">
           {project.title}
         </h3>
-        {project.description && (
+        {description && (
           <p className="text-white/70 text-xs mt-1 line-clamp-1">
-            {project.description}
+            {description}
           </p>
         )}
       </div>

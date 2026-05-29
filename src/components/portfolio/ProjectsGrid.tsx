@@ -1,8 +1,15 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { Project } from "@/types";
+import type { Locale } from "@/lib/i18n";
 
-export function ProjectsGrid({ projects }: { projects: Project[] }) {
+function localizedDescription(project: Project, locale: Locale): string | null {
+  if (locale === "ca" && project.description_ca) return project.description_ca;
+  if (locale === "en" && project.description_en) return project.description_en;
+  return project.description;
+}
+
+export function ProjectsGrid({ projects, locale }: { projects: Project[]; locale: Locale }) {
   if (!projects || projects.length === 0) {
     return (
       <div className="flex items-center justify-center h-64 border border-dashed border-neutral-200">
@@ -15,7 +22,9 @@ export function ProjectsGrid({ projects }: { projects: Project[] }) {
 
   return (
     <div className="columns-1 sm:columns-2 lg:columns-3 gap-4 space-y-4">
-      {projects.map((project, i) => (
+      {projects.map((project, i) => {
+        const description = localizedDescription(project, locale);
+        return (
         <Link
           key={project.id}
           href={`/portfolio/${project.slug}`}
@@ -43,14 +52,15 @@ export function ProjectsGrid({ projects }: { projects: Project[] }) {
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           <div className="absolute bottom-0 left-0 right-0 p-5 translate-y-1 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
             <h3 className="text-white text-sm font-medium">{project.title}</h3>
-            {project.description && (
+            {description && (
               <p className="text-neutral-300 text-xs mt-0.5 line-clamp-1">
-                {project.description}
+                {description}
               </p>
             )}
           </div>
         </Link>
-      ))}
+        );
+      })}
     </div>
   );
 }

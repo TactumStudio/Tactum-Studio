@@ -81,12 +81,35 @@ export function ProjectTableRow({ project }: { project: Project }) {
                 <label className="text-[10px] tracking-widest uppercase text-neutral-500">
                   Descripció
                 </label>
-                <textarea
-                  name="description"
-                  defaultValue={project.description ?? ""}
-                  rows={2}
-                  className="bg-white border border-neutral-200 text-neutral-900 rounded-sm px-3 py-2 text-sm outline-none focus:border-neutral-400 transition-colors resize-none"
-                />
+                <div className="flex flex-col gap-1.5">
+                  <div className="flex items-start gap-2">
+                    <span className="mt-2 text-[10px] font-mono text-neutral-400 w-5 shrink-0">ES</span>
+                    <textarea
+                      name="description"
+                      defaultValue={project.description ?? ""}
+                      rows={2}
+                      className="flex-1 bg-white border border-neutral-200 text-neutral-900 rounded-sm px-3 py-2 text-sm outline-none focus:border-neutral-400 transition-colors resize-none"
+                    />
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span className="mt-2 text-[10px] font-mono text-neutral-400 w-5 shrink-0">CA</span>
+                    <textarea
+                      name="description_ca"
+                      defaultValue={project.description_ca ?? ""}
+                      rows={2}
+                      className="flex-1 bg-white border border-neutral-200 text-neutral-900 rounded-sm px-3 py-2 text-sm outline-none focus:border-neutral-400 transition-colors resize-none"
+                    />
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span className="mt-2 text-[10px] font-mono text-neutral-400 w-5 shrink-0">EN</span>
+                    <textarea
+                      name="description_en"
+                      defaultValue={project.description_en ?? ""}
+                      rows={2}
+                      className="flex-1 bg-white border border-neutral-200 text-neutral-900 rounded-sm px-3 py-2 text-sm outline-none focus:border-neutral-400 transition-colors resize-none"
+                    />
+                  </div>
+                </div>
               </div>
               <div className="flex gap-2">
                 <button
