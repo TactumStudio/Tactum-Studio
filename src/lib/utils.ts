@@ -12,6 +12,13 @@ export function formatPrice(cents: number): string {
   }).format(cents / 100);
 }
 
+export function getYouTubeId(url: string): string | null {
+  const match = url.match(
+    /(?:youtube\.com\/(?:watch\?v=|shorts\/|embed\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/
+  );
+  return match ? match[1] : null;
+}
+
 export function slugify(text: string): string {
   return text
     .toLowerCase()

@@ -1,6 +1,7 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getLocale, t } from "@/lib/i18n";
 import type { SiteSettings } from "@/types";
+import { ContactForm } from "@/components/contact/ContactForm";
 
 export default async function ContactPage() {
   const supabase = createAdminClient();
@@ -95,6 +96,15 @@ export default async function ContactPage() {
             {t('contact.empty', locale)}
           </p>
         )}
+
+        <div className="border-t border-neutral-100 mb-14" />
+
+        <div className="mb-16 border border-neutral-200 rounded-sm p-8 md:p-12">
+          <p className="text-[9px] tracking-[0.5em] uppercase text-neutral-400 mb-10">
+            {t("contact.form.title", locale)}
+          </p>
+          <ContactForm locale={locale} />
+        </div>
 
         {settings?.contact_location && (
           <>
