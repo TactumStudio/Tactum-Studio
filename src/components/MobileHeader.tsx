@@ -18,12 +18,9 @@ interface Props {
 }
 
 export function MobileHeader({ navItems, instagramUrl, locale }: Props) {
-  const [open, setOpen] = useState(false);
   const pathname = usePathname();
-
-  useEffect(() => {
-    setOpen(false);
-  }, [pathname]);
+  const [openAt, setOpenAt] = useState<string | null>(null);
+  const open = openAt === pathname;
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
@@ -81,7 +78,7 @@ export function MobileHeader({ navItems, instagramUrl, locale }: Props) {
 
             {/* Botón hamburger — solo móvil */}
             <button
-              onClick={() => setOpen((v) => !v)}
+              onClick={() => setOpenAt(open ? null : pathname)}
               className="md:hidden flex items-center justify-center w-10 h-10 text-zinc-300 hover:text-white transition-colors"
               aria-label={open ? "Cerrar menú" : "Abrir menú"}
               aria-expanded={open}
@@ -109,7 +106,7 @@ export function MobileHeader({ navItems, instagramUrl, locale }: Props) {
               <Link
                 key={item.href}
                 href={item.href}
-                onClick={() => setOpen(false)}
+                onClick={() => setOpenAt(null)}
                 className="text-2xl font-light text-zinc-100 hover:text-white py-4 border-b border-white/5 last:border-0 transition-colors"
               >
                 {item.label}
@@ -123,7 +120,7 @@ export function MobileHeader({ navItems, instagramUrl, locale }: Props) {
                 href={instagramUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                onClick={() => setOpen(false)}
+                onClick={() => setOpenAt(null)}
                 className="flex items-center gap-3 text-zinc-400 hover:text-zinc-200 transition-colors text-xs tracking-[0.25em] uppercase"
               >
                 <svg className="w-5 h-5 shrink-0" fill="currentColor" viewBox="0 0 24 24">

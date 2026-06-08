@@ -35,7 +35,7 @@ export async function FeaturedProjects({ locale }: Props) {
           <ProjectCard
             project={items[0]}
             locale={locale}
-            className="flex-[2] h-[65vw] md:h-full"
+            className="flex-[2] min-h-[65vw] md:min-h-0 md:h-full"
             sizes="(max-width: 768px) 100vw, 66vw"
             priority
           />
@@ -45,7 +45,7 @@ export async function FeaturedProjects({ locale }: Props) {
                 key={p.id}
                 project={p}
                 locale={locale}
-                className="flex-1 h-[32vw] md:h-auto"
+                className="flex-1 min-h-[32vw] md:min-h-0 md:h-auto"
                 sizes="(max-width: 768px) 100vw, 33vw"
               />
             ))}
@@ -56,14 +56,14 @@ export async function FeaturedProjects({ locale }: Props) {
           <ProjectCard
             project={items[0]}
             locale={locale}
-            className="flex-1 h-[60vw] md:h-full"
+            className="flex-1 min-h-[60vw] md:min-h-0 md:h-full"
             sizes="(max-width: 768px) 100vw, 50vw"
             priority
           />
           <ProjectCard
             project={items[1]}
             locale={locale}
-            className="flex-1 h-[60vw] md:h-full"
+            className="flex-1 min-h-[60vw] md:min-h-0 md:h-full"
             sizes="(max-width: 768px) 100vw, 50vw"
           />
         </div>
