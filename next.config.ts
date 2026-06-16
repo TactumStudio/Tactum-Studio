@@ -14,7 +14,13 @@ function getLocalNetworkIPs(): string[] {
 const nextConfig: NextConfig = {
   allowedDevOrigins: getLocalNetworkIPs(),
   images: {
-    unoptimized: true,
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**.r2.dev",
+      },
+    ],
+    minimumCacheTTL: 2592000,
   },
 };
 
