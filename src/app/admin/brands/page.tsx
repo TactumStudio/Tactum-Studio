@@ -1,19 +1,13 @@
 import Image from "next/image";
 import type { Metadata } from "next";
-import type { Brand } from "@/types";
-import { createAdminClient } from "@/lib/supabase/admin";
 import { CreateBrandForm } from "@/components/admin/CreateBrandForm";
 import { DeleteBrandButton } from "@/components/admin/DeleteBrandButton";
+import { listBrands } from "@/modules/brands/infrastructure/brandQueries";
 
 export const metadata: Metadata = { title: "Marques" };
 
 export default async function AdminBrandsPage() {
-  const supabase = createAdminClient();
-
-  const { data: brands } = await supabase
-    .from("brands")
-    .select("*")
-    .order("display_order", { ascending: true });
+  const brands = await listBrands();
 
   return (
     <div className="max-w-2xl">
@@ -40,7 +34,7 @@ export default async function AdminBrandsPage() {
         </div>
       ) : (
         <div className="flex flex-col divide-y divide-neutral-100 border border-neutral-200 rounded-sm overflow-hidden">
-          {(brands as Brand[]).map((brand) => (
+          {brands.map((brand) => (
             <div
               key={brand.id}
               className="flex items-center gap-4 px-4 py-3 hover:bg-neutral-50 transition-colors"

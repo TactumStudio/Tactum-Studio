@@ -1,19 +1,12 @@
 import type { Metadata } from "next";
-import type { Project } from "@/types";
-import { createAdminClient } from "@/lib/supabase/admin";
 import { CreateProjectForm } from "@/components/admin/CreateProjectForm";
 import { ProjectTableRow } from "@/components/admin/ProjectTableRow";
+import { listAdminProjects } from "@/modules/projects/infrastructure/projectQueries";
 
 export const metadata: Metadata = { title: "Projectes" };
 
 export default async function AdminProjectsPage() {
-  const supabase = createAdminClient();
-
-  const { data: projects } = await supabase
-    .from("projects")
-    .select("*")
-    .order("display_order", { ascending: true })
-    .order("created_at", { ascending: false });
+  const projects = await listAdminProjects();
 
   return (
     <div className="max-w-4xl">
@@ -55,7 +48,7 @@ export default async function AdminProjectsPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-neutral-100">
-              {(projects as Project[]).map((project) => (
+              {projects.map((project) => (
                 <ProjectTableRow key={project.id} project={project} />
               ))}
             </tbody>

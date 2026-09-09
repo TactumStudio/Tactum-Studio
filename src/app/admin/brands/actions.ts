@@ -2,32 +2,31 @@
 
 import { revalidatePath } from "next/cache";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { CreateBrandHandler } from "@/modules/brands/application/create-brand/CreateBrandHandler";
+import { DeleteBrandHandler } from "@/modules/brands/application/delete-brand/DeleteBrandHandler";
+import { SupabaseBrandRepository } from "@/modules/brands/infrastructure/SupabaseBrandRepository";
+
+function brandRepository() {
+  return new SupabaseBrandRepository(createAdminClient());
+}
 
 export async function createBrand(
   name: string | null,
   logoUrl: string | null,
   websiteUrl?: string
 ) {
-  const supabase = createAdminClient();
-
-  const { error } = await supabase.from("brands").insert({
-    name: name || null,
-    logo_url: logoUrl || null,
-    website_url: websiteUrl ?? null,
+  await new CreateBrandHandler(brandRepository()).execute({
+    name,
+    logoUrl,
+    websiteUrl,
   });
-
-  if (error) throw new Error(error.message);
 
   revalidatePath("/admin/brands");
   revalidatePath("/"); // carrusel en la Home
 }
 
 export async function deleteBrand(id: string) {
-  const supabase = createAdminClient();
-
-  const { error } = await supabase.from("brands").delete().eq("id", id);
-
-  if (error) throw new Error(error.message);
+  await new DeleteBrandHandler(brandRepository()).execute(id);
 
   revalidatePath("/admin/brands");
   revalidatePath("/");
