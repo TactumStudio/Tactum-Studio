@@ -2,32 +2,35 @@
 
 import { revalidatePath } from "next/cache";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { AddProjectVideoHandler } from "@/modules/media/application/add-project-video/AddProjectVideoHandler";
+import { DeletePhotoHandler } from "@/modules/media/application/delete-photo/DeletePhotoHandler";
+import { DeleteProjectVideoHandler } from "@/modules/media/application/delete-project-video/DeleteProjectVideoHandler";
+import { SavePhotoHandler } from "@/modules/media/application/save-photo/SavePhotoHandler";
+import { UpdatePhotoOrderHandler } from "@/modules/media/application/update-photo-order/UpdatePhotoOrderHandler";
+import { SupabaseMediaRepository } from "@/modules/media/infrastructure/SupabaseMediaRepository";
+
+function mediaRepository() {
+  return new SupabaseMediaRepository(createAdminClient());
+}
 
 export async function savePhoto(
   projectId: string,
   url: string,
+  projectSlug: string,
   altText?: string
 ) {
-  const supabase = createAdminClient();
-
-  const { error } = await supabase.from("photos").insert({
-    project_id: projectId,
+  await new SavePhotoHandler(mediaRepository()).execute({
+    projectId,
     url,
-    alt_text: altText ?? null,
+    altText,
   });
 
-  if (error) throw new Error(error.message);
-
   revalidatePath("/admin/photos");
-  revalidatePath(`/portfolio/${projectId}`);
+  revalidatePath(`/portfolio/${projectSlug}`);
 }
 
 export async function deletePhoto(id: string, projectSlug: string) {
-  const supabase = createAdminClient();
-
-  const { error } = await supabase.from("photos").delete().eq("id", id);
-
-  if (error) throw new Error(error.message);
+  await new DeletePhotoHandler(mediaRepository()).execute(id);
 
   revalidatePath("/admin/photos");
   revalidatePath(`/portfolio/${projectSlug}`);
@@ -36,13 +39,7 @@ export async function deletePhoto(id: string, projectSlug: string) {
 export async function updatePhotoOrder(
   photos: { id: string; display_order: number }[]
 ) {
-  const supabase = createAdminClient();
-
-  await Promise.all(
-    photos.map(({ id, display_order }) =>
-      supabase.from("photos").update({ display_order }).eq("id", id)
-    )
-  );
+  await new UpdatePhotoOrderHandler(mediaRepository()).execute(photos);
 
   revalidatePath("/admin/photos");
 }
@@ -53,29 +50,18 @@ export async function addProjectVideo(
   title?: string,
   projectSlug?: string
 ) {
-  const supabase = createAdminClient();
-
-  const { error } = await supabase.from("project_videos").insert({
-    project_id: projectId,
-    url: url.trim(),
-    title: title?.trim() || null,
+  await new AddProjectVideoHandler(mediaRepository()).execute({
+    projectId,
+    url,
+    title,
   });
-
-  if (error) throw new Error(error.message);
 
   revalidatePath("/admin/photos");
   if (projectSlug) revalidatePath(`/portfolio/${projectSlug}`);
 }
 
 export async function deleteProjectVideo(id: string, projectSlug?: string) {
-  const supabase = createAdminClient();
-
-  const { error } = await supabase
-    .from("project_videos")
-    .delete()
-    .eq("id", id);
-
-  if (error) throw new Error(error.message);
+  await new DeleteProjectVideoHandler(mediaRepository()).execute(id);
 
   revalidatePath("/admin/photos");
   if (projectSlug) revalidatePath(`/portfolio/${projectSlug}`);

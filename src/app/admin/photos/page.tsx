@@ -1,10 +1,10 @@
 import Image from "next/image";
 import type { Metadata } from "next";
-import type { Project, Photo, ProjectVideo } from "@/types";
-import { createAdminClient } from "@/lib/supabase/admin";
 import { PhotoUploader } from "@/components/admin/PhotoUploader";
 import { DeletePhotoButton } from "@/components/admin/DeletePhotoButton";
 import { VideoManager } from "@/components/admin/VideoManager";
+import { listAdminProjects } from "@/modules/projects/infrastructure/projectQueries";
+import { listProjectMedia } from "@/modules/media/infrastructure/mediaQueries";
 
 export const metadata: Metadata = { title: "Fotos" };
 
@@ -14,32 +14,12 @@ interface Props {
 
 export default async function AdminPhotosPage({ searchParams }: Props) {
   const { project: selectedSlug } = await searchParams;
-  const supabase = createAdminClient();
+  const projects = await listAdminProjects();
 
-  const { data: projects } = await supabase
-    .from("projects")
-    .select("id, title, slug")
-    .order("display_order", { ascending: true });
-
-  const selectedProject = (projects as Project[] | null)?.find(
-    (p) => p.slug === selectedSlug
-  );
-
-  const { data: photos } = selectedProject
-    ? await supabase
-        .from("photos")
-        .select("*")
-        .eq("project_id", selectedProject.id)
-        .order("display_order", { ascending: true })
-    : { data: null };
-
-  const { data: videos } = selectedProject
-    ? await supabase
-        .from("project_videos")
-        .select("*")
-        .eq("project_id", selectedProject.id)
-        .order("display_order", { ascending: true })
-    : { data: null };
+  const selectedProject = projects.find((p) => p.slug === selectedSlug);
+  const media = selectedProject
+    ? await listProjectMedia(selectedProject.id)
+    : { photos: [], videos: [] };
 
   return (
     <div className="max-w-4xl">
@@ -51,7 +31,7 @@ export default async function AdminPhotosPage({ searchParams }: Props) {
           Projecte
         </h2>
 
-        {!projects || projects.length === 0 ? (
+        {projects.length === 0 ? (
           <p className="text-sm text-neutral-500">
             Crea primer un projecte a{" "}
             <a
@@ -64,7 +44,7 @@ export default async function AdminPhotosPage({ searchParams }: Props) {
           </p>
         ) : (
           <div className="flex flex-wrap gap-2">
-            {(projects as Project[]).map((project) => (
+            {projects.map((project) => (
               <a
                 key={project.id}
                 href={`/admin/photos?project=${project.slug}`}
@@ -88,7 +68,10 @@ export default async function AdminPhotosPage({ searchParams }: Props) {
             <h2 className="text-xs tracking-widest uppercase text-neutral-500 mb-5">
               Afegir fotos — {selectedProject.title}
             </h2>
-            <PhotoUploader projectId={selectedProject.id} />
+            <PhotoUploader
+              projectId={selectedProject.id}
+              projectSlug={selectedProject.slug}
+            />
           </div>
 
           {/* Fotos existents */}
@@ -97,7 +80,7 @@ export default async function AdminPhotosPage({ searchParams }: Props) {
               Fotos del projecte
             </h2>
 
-            {!photos || photos.length === 0 ? (
+            {media.photos.length === 0 ? (
               <div className="flex items-center justify-center h-32 border border-dashed border-neutral-200 rounded-sm">
                 <p className="text-neutral-400 text-xs tracking-widest uppercase">
                   Encara no hi ha fotos
@@ -105,7 +88,7 @@ export default async function AdminPhotosPage({ searchParams }: Props) {
               </div>
             ) : (
               <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2">
-                {(photos as Photo[]).map((photo) => (
+                {media.photos.map((photo) => (
                   <div key={photo.id} className="relative group aspect-square">
                     <Image
                       src={photo.url}
@@ -132,7 +115,7 @@ export default async function AdminPhotosPage({ searchParams }: Props) {
             <VideoManager
               projectId={selectedProject.id}
               projectSlug={selectedProject.slug}
-              videos={(videos as ProjectVideo[]) ?? []}
+              videos={media.videos}
             />
           </div>
         </>
