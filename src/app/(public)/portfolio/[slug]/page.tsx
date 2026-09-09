@@ -2,10 +2,13 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Project, Photo, ProjectVideo } from "@/types";
-import { createAdminClient } from "@/lib/supabase/admin";
 import { PhotoGallery } from "@/components/portfolio/PhotoGallery";
 import { getLocale } from "@/lib/i18n";
 import type { Locale } from "@/lib/i18n";
+import {
+  getProjectDetailBySlug,
+  getProjectMetadata,
+} from "@/modules/projects/infrastructure/projectQueries";
 
 function localizedDescription(project: Project, locale: Locale): string | null {
   if (locale === "ca" && project.description_ca) return project.description_ca;
@@ -19,12 +22,7 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const supabase = createAdminClient();
-  const { data } = await supabase
-    .from("projects")
-    .select("title, description")
-    .eq("slug", slug)
-    .single();
+  const data = await getProjectMetadata(slug);
 
   if (!data) return {};
   return {
@@ -34,27 +32,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ProjectPage({ params }: Props) {
   const { slug } = await params;
-  const [supabase, locale] = [createAdminClient(), await getLocale()];
-
-  const { data: project } = await supabase
-    .from("projects")
-    .select("*")
-    .eq("slug", slug)
-    .single();
+  const [projectDetail, locale] = await Promise.all([
+    getProjectDetailBySlug(slug),
+    getLocale(),
+  ]);
+  const { project, photos, videos } = projectDetail;
 
   if (!project) notFound();
-
-  const { data: photos } = await supabase
-    .from("photos")
-    .select("*")
-    .eq("project_id", (project as Project).id)
-    .order("display_order", { ascending: true });
-
-  const { data: videos } = await supabase
-    .from("project_videos")
-    .select("*")
-    .eq("project_id", (project as Project).id)
-    .order("display_order", { ascending: true });
 
   return (
     <div className="min-h-screen bg-white pt-32 pb-24 px-6 md:px-10">
@@ -86,11 +70,11 @@ export default async function ProjectPage({ params }: Props) {
             Proyecto
           </p>
           <h1 className="text-4xl md:text-5xl font-light tracking-tight text-neutral-900 mb-4">
-            {(project as Project).title}
+              {project.title}
           </h1>
-          {localizedDescription(project as Project, locale) && (
+          {localizedDescription(project, locale) && (
             <p className="text-neutral-500 text-sm leading-relaxed">
-              {localizedDescription(project as Project, locale)}
+              {localizedDescription(project, locale)}
             </p>
           )}
         </div>

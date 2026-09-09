@@ -4,22 +4,19 @@ import { Hero } from "@/components/home/Hero";
 import { FeaturedProjects } from "@/components/home/FeaturedProjects";
 import { IntroSection } from "@/components/home/IntroSection";
 import { ContactCTA } from "@/components/home/ContactCTA";
-import type { Brand, SiteSettings } from "@/types";
+import type { SiteSettings } from "@/types";
+import { listBrands } from "@/modules/brands/infrastructure/brandQueries";
 
 export default async function HomePage() {
   const supabase = createAdminClient();
   const locale = await getLocale();
 
-  const [{ data: settingsData }, { data: brandsData }] = await Promise.all([
+  const [{ data: settingsData }, brands] = await Promise.all([
     supabase.from("site_settings").select("*").eq("id", 1).maybeSingle(),
-    supabase
-      .from("brands")
-      .select("*")
-      .order("display_order", { ascending: true }),
+    listBrands(),
   ]);
 
   const settings = settingsData as SiteSettings | null;
-  const brands = brandsData as Brand[] | null;
 
   return (
     <div className="bg-white">
