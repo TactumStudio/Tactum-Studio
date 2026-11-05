@@ -16,9 +16,10 @@ interface UploadItem {
 
 interface Props {
   projectId: string;
+  projectSlug: string;
 }
 
-export function PhotoUploader({ projectId }: Props) {
+export function PhotoUploader({ projectId, projectSlug }: Props) {
   const [items, setItems] = useState<UploadItem[]>([]);
   const [isUploading, startUpload] = useTransition();
 
@@ -74,7 +75,7 @@ export function PhotoUploader({ projectId }: Props) {
 
       if (!uploadRes.ok) throw new Error("Error en pujar a R2");
 
-      await savePhoto(projectId, publicUrl);
+      await savePhoto(projectId, publicUrl, projectSlug);
 
       setItems((prev) =>
         prev.map((i) =>
